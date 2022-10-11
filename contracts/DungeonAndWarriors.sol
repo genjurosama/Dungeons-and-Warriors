@@ -19,7 +19,8 @@ contract DungeonsAndWarriors is ERC721,Ownable{
 
     uint HpReplenishRateByMinute = 1;
     uint levelUpRateByHour = 1;
-
+    uint damagePerHour = _random(3) + 1;
+    uint8 levelUpHpModifier = 2;
      /*///////////////////////////////////////////////////////////////
                 DATA STRUCTURES 
     //////////////////////////////////////////////////////////////*/
@@ -107,16 +108,29 @@ contract DungeonsAndWarriors is ERC721,Ownable{
     function claim(uint tokenId) public callerIsOwner(tokenId) {
         Action memory action = currentActions[tokenId];
 
-        uint256 timeDiffInMinutes = (block.timestamp - action.timestamp) * 60;
+        uint256 timeDiffInMinutes = (block.timestamp - action.timestamp) / 60;
+        console.log('time diff in minutes',timeDiffInMinutes);
         if(action.action == Actions.RESTING){
             Warrior memory warrior = warriors[tokenId] ;
-            warrior.hp += timeDiffInMinutes * HpReplenishRateByMinute;
+            uint addedHp = timeDiffInMinutes * HpReplenishRateByMinute;
+            console.log('hp to be added',addedHp);
+            console.log('formula for hP',(warrior.hp + addedHp) > warrior.maxHp ? warrior.maxHp : warrior.hp + addedHp);
+            warrior.hp = (warrior.hp + addedHp) > warrior.maxHp ? warrior.maxHp : warrior.hp + addedHp;
             warriors[tokenId] = warrior;
             delete currentActions[tokenId];
         }
         if(action.action == Actions.TRAINING){
             Warrior memory warrior = warriors[tokenId] ;
-            warrior.level += (timeDiffInMinutes * 60) * levelUpRateByHour;
+            console.log('time diff in hours',(timeDiffInMinutes / 60) );
+            warrior.level += (timeDiffInMinutes / 60) * levelUpRateByHour;
+            warrior.maxHp = warrior.maxHp  * levelUpHpModifier;
+            warriors[tokenId] = warrior;
+            delete currentActions[tokenId];
+        }
+
+        if(action.action == Actions.RAIDING){
+            Warrior memory warrior = warriors[tokenId] ;
+            warrior.hp -= (timeDiffInMinutes / 60) * damagePerHour;
             warriors[tokenId] = warrior;
             delete currentActions[tokenId];
         }
