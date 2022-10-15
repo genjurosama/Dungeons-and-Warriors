@@ -1,0 +1,352 @@
+ /**
+     * @dev Hash to SVG function
+     */
+  function hashToSVG(string memory _hash)
+  public
+  view
+  returns (string memory)
+{
+
+  string memory svgString;
+  bool[60][60] memory placedPixels;
+  for (uint8 i = 0; i < 5; i++) {
+      uint8 thisTraitIndex = AnonymiceLibrary.parseInt(
+          AnonymiceLibrary.substring(_hash, i, i + 1)
+      );
+
+
+      for (
+          uint16 j = 0;
+          j < traitTypes[i][thisTraitIndex].pixelCount;
+          j++
+      ) {
+          string memory thisPixel = AnonymiceLibrary.substring(
+              traitTypes[i][thisTraitIndex].pixels,
+              j * 4,
+              j * 4 + 4
+          );
+
+
+
+
+          uint8 x = letterToNumber(
+              AnonymiceLibrary.substring(thisPixel, 0, 1)
+          );
+          uint8 y = letterToNumber(
+              AnonymiceLibrary.substring(thisPixel, 1, 2)
+          );
+
+          if (placedPixels[x][y]) continue;
+          svgString = string(
+              abi.encodePacked(
+                  svgString,
+                  "<rect class='c",
+                  AnonymiceLibrary.substring(thisPixel, 2, 4),
+                  "' x='",
+                  x.toString(),
+                  "' y='",
+                  y.toString(),
+                  "'/>"
+              )
+          );
+          placedPixels[x][y] = true;
+      }
+  }
+  svgString = string(
+      abi.encodePacked(
+          '<svg id="mouse-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 24 24"> ',
+          svgString,
+          "<style>rect{width:1px;height:1px;} #mouse-svg{shape-rendering: crispedges;} c00{fill: #5121A00 } .c01{fill: #FF } .c02{fill: #7182300 } .c03{fill: #17486BFF } .c04{fill: #306082FF } .c05{fill: #3F3F74FF } .c06{fill: #E4DB1CFF } .c07{fill: #39360700 } .c08{fill: #1F1F4AFF } .c09{fill: #F0F1D00 } .c10{fill: #C0C1700 } .c11{fill: #5B570B00 } .c12{fill: #A0A1800 } .c13{fill: #4C490900 } .c14{fill: #C182000 } .c15{fill: #7071200 } .c16{fill: #15152600 } .c17{fill: #FFFFFFFF } .c18{fill: #10202B00 } .c19{fill: #13263400 } .c20{fill: #2B0C0C00 } .c21{fill: #39101000 } .c22{fill: #AC3232FF } .c23{fill: #D95763FF } .c24{fill: #30050500 } .c25{fill: #C31414FF } .c26{fill: #8D0A0AFF } .c27{fill: #27040400 } .c28{fill: #2F030300 } .c29{fill: #36151800 } .c30{fill: #23020200 } .c31{fill: #41060600 } .c32{fill: #481D2100 } .c33{fill: #56222700 } .c34{fill: #D9A06600 } .c35{fill: #D9A066FF } .c36{fill: #EEC39AFF } .c37{fill: #F2D8BFFF } .c38{fill: #E3B68900 } .c39{fill: #F1D3B700 } .c40{fill: #90654100 } .c41{fill: #E0AB7700 } .c42{fill: #F0D1B200 } .c43{fill: #7D533700 } .c44{fill: #8F563BFF } .c45{fill: #663931FF } .c46{fill: #E9BC8F00 } .c47{fill: #EEC7A100 } .c48{fill: #A15555FF } .c49{fill: #6B402C00 } .c50{fill: #8F563B00 } .c51{fill: #A9734E00 } .c52{fill: #ECC8A500 } .c53{fill: #9F6C4B00 } .c54{fill: #F2D8BF00 } .c55{fill: #B5A28F00 } .c56{fill: #C89A7500 } .c57{fill: #9C816E00 } .c58{fill: #796C5F00 } .c59{fill: #48352200 } .c60{fill: #472B1D00 } .c61{fill: #3C362F00 } .c62{fill: #41454700 } .c63{fill: #4C535700 } .c64{fill: #C4D0D7FF } .c65{fill: #99A7AEFF } .c66{fill: #33373A00 } .c67{fill: #26292B00 } .c68{fill: #9BADB7FF } .c69{fill: #262B2D00 } .c70{fill: #31343500 } .c71{fill: #4E535600 } .c72{fill: #62686B00 } .c73{fill: #FFFFFF00 } .c74{fill: #55555500 } .c75{fill: #3D292000 } .c76{fill: #5B3E3000 } .c77{fill: #B77C60FF } .c78{fill: #B77C6000 } .c79{fill: #23150E00 } .c80{fill: #CB9379FF } .c81{fill: #66393100 } .c82{fill: #C58C6B00 } .c83{fill: #C78E7400 } .c84{fill: #C48B7000 } .c85{fill: #BB806500 } .c86{fill: #A36F56FF } .c87{fill: #A6705200 } .c88{fill: #C38B7200 } .c89{fill: #BF876D00 } .c90{fill: #CB937900 } .c91{fill: #87625000 } .c92{fill: #BB835E00 } .c93{fill: #895F4B00 } .c94{fill: #43312800 } .c95{fill: #32241E00 } .c96{fill: #3E3D2500 } .c97{fill: #52513100 } .c98{fill: #63613B00 } .c99{fill: #F8F494FF } .c100{fill: #F8F6C4FF } .c101{fill: #F2E711FF } .c102{fill: #FBF236FF } .c103{fill: #F3EA3100 } .c104{fill: #F2E71100 } .c105{fill: #F4E91A00 } .c106{fill: #F8EF2C00 } .c107{fill: #F8EE2900 } .c108{fill: #F5EA1D00 } .c109{fill: #53501200 } .c110{fill: #D8C91800 } .c111{fill: #BEAB2000 } .c112{fill: #8A6F3000 } .c113{fill: #3C390400 } .c114{fill: #8A6F30FF } .c115{fill: #45371800 } .c116{fill: #504D0500 } .c117{fill: #33393D00 } .c118{fill: #2D040400 } .c119{fill: #3D060600 } .c120{fill: #B71313FF } .c121{fill: #483F3FFF } .c122{fill: #18151500 } .c123{fill: #890707FF } .c124{fill: #788389FF } .c125{fill: #95A2AAFF } .c126{fill: #5B090900 } .c127{fill: #B5C3CBFF } .c128{fill: #24272800 } .c129{fill: #42474A00 } .c130{fill: #D82222FF } .c131{fill: #31363800 } .c132{fill: #282B2D00 } .c133{fill: #20222300 } .c134{fill: #36080800 } .c135{fill: #2D303200 } .c136{fill: #1E202100 } .c137{fill: #480B0B00 } .c138{fill: #3C414300 } .c139{fill: #16151400 } .c140{fill: #1D1C1B00 } .c141{fill: #595652FF } .c142{fill: #696A6AFF } .c143{fill: #11111100 } .c144{fill: #1C1A0E00 } .c145{fill: #21201800 } .c146{fill: #1C1A0EFF } .c147{fill: #2E2D2600 } .c148{fill: #333436FF } .c149{fill: #848587FF } .c150{fill: #535456FF } .c151{fill: #F0700 } .c152{fill: #443F1900 } .c153{fill: #F07FF } .c154{fill: #302F1200 } .c155{fill: #1D140B00 } .c156{fill: #3A201700 } .c157{fill: #CCA13EFF } .c158{fill: #AE8830FF } .c159{fill: #917128FF } .c160{fill: #34261100 } .c161{fill: #742319FF } .c162{fill: #963A2FFF } .c163{fill: #B04437FF } .c164{fill: #D181200 } .c165{fill: #22270F00 } .c166{fill: #2C1C1300 } .c167{fill: #363636FF } .c168{fill: #A161000 } .c169{fill: #15150C00 } .c170{fill: #16170F00 } .c171{fill: #583028FF } .c172{fill: #43231CFF } .c173{fill: #18200C00 } .c174{fill: #17130A00 } .c175{fill: #33331400 } .c176{fill: #26150D00 } .c177{fill: #24270F00 } c178{fill: #2F3B3300 } .c179{fill: #49544E00 } .c180{fill: #25302A00 } .c181{fill: #8E958DFF } .c182{fill: #DBDFDEFF } .c183{fill: #949494FF } .c184{fill: #23302800 } .c185{fill: #11150D00 } .c186{fill: #9F968FFF } .c187{fill: #41493D00 } .c188{fill: #C3BEAAFF } .c189{fill: #ABA58BFF } .c190{fill: #2A342800 } .c191{fill: #3C1D0900 } .c192{fill: #643B0D00 } .c193{fill: #3C1D09FF } .c194{fill: #1E0E0400 } .c195{fill: #B57917FF } .c196{fill: #35363700 } .c197{fill: #633A0E00 } .c198{fill: #1A1C1D00 } .c199{fill: #9FA4A7FF } .c200{fill: #D8911FFF } .c201{fill: #505558FF } .c202{fill: #E7F117FF } .c203{fill: #FDFDFDFF } .c204{fill: #54545400 } .c205{fill: #66520C00 } .c206{fill: #75630D00 } .c207{fill: #3F3F3F00 } .c208{fill: #4F413300 } .c209{fill: #1F222400 } .c210{fill: #191C1E00 } .c211{fill: #11111000 } .c212{fill: #2C2B2900 } .c213{fill: #3B393600 } .c214{fill: #5E5C5A00 } .c215{fill: #63636200 } .c216{fill: #696A6A00 } .c217{fill: #59565200 } .c218{fill: #27221300 } .c219{fill: #2B251500 } .c220{fill: #4A3C23FF } .c221{fill: #37311F00 } .c222{fill: #6E5F42FF } .c223{fill: #342B19FF } .c224{fill: #302B1B00 } </style></svg>"
+      )
+  );  
+  console.log(svgString);
+  return svgString;
+}
+
+
+/**
+* @dev Add a trait type
+* @param _traitTypeIndex The trait type index
+* @param traits Array of traits to add
+*/
+
+function addTraitType(uint256 _traitTypeIndex, Trait[] memory traits)
+  public
+  onlyOwner
+{
+  for (uint256 i = 0; i < traits.length; i++) {
+      traitTypes[_traitTypeIndex].push(
+          Trait(
+              traits[i].traitName,
+              traits[i].traitType,
+              traits[i].pixels,
+              traits[i].pixelCount
+          )
+      );
+  }
+
+  return;
+}
+
+
+function getTraitAsSvg(uint256 _traitTypeIndex) public returns(Trait memory) {
+
+}
+
+
+/**
+* @dev Returns the SVG and metadata for a token Id
+* @param _tokenId The tokenId to return the SVG and metadata for.
+*/
+function tokenURI(uint256 _tokenId)
+  public
+  view
+  override
+  returns (string memory)
+{
+  
+  require(_exists(_tokenId));
+
+  string memory tokenHash = _tokenIdToHash(_tokenId);
+  return hashToSVG(tokenHash);
+}
+
+
+function getTokenHash( uint256 _tokenId) public  view returns (string memory) {
+  return _tokenIdToHash(_tokenId);
+}
+
+
+/**
+* @dev Hash to metadata function
+*/
+function hashToMetadata(string memory _hash)
+  public
+  view
+  returns (string memory)
+{
+  string memory metadataString;
+
+  for (uint8 i = 0; i < 9; i++) {
+      uint8 thisTraitIndex = AnonymiceLibrary.parseInt(
+          AnonymiceLibrary.substring(_hash, i, i + 1)
+      );
+
+      metadataString = string(
+          abi.encodePacked(
+              metadataString,
+              '{"trait_type":"',
+              traitTypes[i][thisTraitIndex].traitType,
+              '","value":"',
+              traitTypes[i][thisTraitIndex].traitName,
+              '"}'
+          )
+      );
+
+      if (i != 8)
+          metadataString = string(abi.encodePacked(metadataString, ","));
+  }
+
+  return string(abi.encodePacked("[", metadataString, "]"));
+}
+
+
+/**
+* @dev Returns a hash for a given tokenId
+* @param _tokenId The tokenId to return the hash for.
+*/
+function _tokenIdToHash(uint256 _tokenId)
+  public
+  view
+  returns (string memory)
+{
+  string memory tokenHash = tokenIdToHash[_tokenId];
+  //If this is a burned token, override the previous hash
+  if (ownerOf(_tokenId) == 0x000000000000000000000000000000000000dEaD) {
+      tokenHash = string(
+          abi.encodePacked(
+              "1",
+              AnonymiceLibrary.substring(tokenHash, 1, 9)
+          )
+      );
+  }
+
+  return tokenHash;
+}
+
+/**
+* @dev Generates a 9 digit hash from a tokenId, address, and random number.
+* @param _t The token id to be used within the hash.
+* @param _a The address to be used within the hash.
+* @param _c The custom nonce to be used within the hash.
+*/
+function hash(
+  uint256 _t,
+  address _a,
+  uint256 _c
+) internal returns (string memory) {
+  require(_c < 10);
+
+  // This will generate a 8 character string.
+  //The last 7 digits are random, the first is 0, due to the mouse not being burned.
+  string memory currentHash = "";
+
+  for (uint8 i = 0; i < 7; i++) {
+      SEED_NONCE++;
+      uint16 _randinput = uint16(
+          uint256(
+              keccak256(
+                  abi.encodePacked(
+                      block.timestamp,
+                      block.difficulty,
+                      _t,
+                      _a,
+                      _c,
+                      SEED_NONCE
+                  )
+              )
+          ) % 10000
+      );
+
+      currentHash = string(
+          abi.encodePacked(currentHash, rarityGen(_randinput, i))
+      );
+  }
+
+  if (hashToMinted[currentHash]) return hash(_t, _a, _c + 1);
+
+  return currentHash;
+}
+
+
+/**
+* @dev Helper function to reduce pixel size within contract
+*/
+function letterToNumber(string memory _inputLetter)
+  internal
+  view
+  returns (uint8)
+{
+  for (uint8 i = 0; i < LETTERS.length; i++) {
+      if (
+          keccak256(abi.encodePacked((LETTERS[i]))) ==
+          keccak256(abi.encodePacked((_inputLetter)))
+      ) { 
+       return (i + 1);
+       }
+  }
+  revert();
+}
+
+
+
+
+
+function rarityGen(uint256 _randinput, uint8 _rarityTier)
+  internal
+  view
+  returns (string memory)
+{
+  uint16 currentLowerBound = 0;
+  for (uint8 i = 0; i < TIERS[_rarityTier].length; i++) {
+      uint16 thisPercentage = TIERS[_rarityTier][i];
+      if (
+          _randinput >= currentLowerBound &&
+          _randinput < currentLowerBound + thisPercentage
+      ) {
+          return i.toString();}
+      currentLowerBound = currentLowerBound + thisPercentage;
+  }
+
+  return Strings.toString(0);
+  revert();
+}
+
+
+
+it("It add trait and retrieve SVG string ", async function() {
+    [account1,account2] = await ethers.getSigners();
+    expect(await dw.balanceOf(account1.address)).to.equal(0);
+    const mintTx = await dw.connect(account1).mint({value: ethers.utils.parseEther("1.0")});
+    const tx  = await dw.connect(account1).addTraitType(0,[{
+        traitName: 'cap1',
+        traitType: 'cap',
+        pixelCount: 392,
+        pixels: 'Bf00Bg01Bh01Bi01Bj01Bk02Ca00Cb01Cc01Cd01Ce01Cf01Cg03Ch03Ci03Cj03Ck01D^00D_01D`01Da01Db03Dc03Dd03De03Df03Dg03Dh03Di04Dj04Dk01Dl00EZ00E[01E\\01E]01E^01E_03E`03Ea03Eb03Ec03Ed04Ee04Ef04Eg04Eh04Ei04Ej04Ek03El01FY01FZ01F[03F\\03F]03F^03F_03F`01Fa01Fb04Fc04Fd04Fe04Ff01Fg01Fh01Fi01Fj01Fk05Fl01GW02GX01GY01GZ03G[01G\\01G]04G^04G_05G`01Ga05Gb01Gc01Gd01Ge01Gf01Gg05Gh05Gi05Gj05Gk06Gl01Gm07HV02HW01HX03HY03HZ01H[01H\\01H]01H^05H_01H`01Ha01Hb01Hc01Hd05He05Hf08Hg08Hh08Hi08Hj08Hk08Hl06Hm01IV01IW03IX04IY01IZ01I[05I\\05I]01I^01I_09Ic10Id01Ie05If05Ig08Ih08Ii08Ij08Ik06Il01Im11JV01JW03JX01JY01JZ01J[01J\\01J]09Jc10Jd01Je05Jf05Jg05Jh05Ji08Jj08Jk08Jl06Jm01KV01KW03KX04KY01K`12Ka01Kb01Kc01Kd05Ke05Kf05Kg08Kh08Ki08Kj08Kk06Kl01Km13LV01LW03LX01LY14L`01La08Lb08Lc08Ld08Le05Lf05Lg05Lh05Li01Lj01Lk01Ll13MV01MW03MX01MY14M_01M`01Ma08Mb01Mc01Md01Me01Mf01Mg01Mh01Mi09NV00NW01NX04NY01N`01Na01Nb15OW01OX04OY01OZ14PW14PX01PY04PZ01Pk13Pl01Pm13QX01QY04QZ01Q[14Qj16Qk01Ql06Qm01Qn13RX01RY17RZ04R[01Ri16Rj01Rk05Rl05Rm06Rn01SX01SY17SZ04S[01Si01Sj05Sk05Sl06Sm01Sn13TX01TY17TZ04T[01Ti16Tj01Tk01Tl01Tm13UX01UY17UZ04U[01VW14VX01VY04VZ01V[18WV18WW01WX04WY01WZ18Wd01We01Wf01Wg01Wh01XV01XW04XX01XY19X]18X^01X_01X`01Xa01Xb01Xc01Xd01Xe01Xf01Xg01Xh01Xi01Xj01Xk01Xl01Xm18YV18YW01YX04YY01Y]01Y^04Y_04Y`04Ya04Yb01Yc01Yd08Ye08Yf05Yg05Yh08Yi08Yj08Yk08Yl04Ym01ZW18ZX01ZY18Z]18Z^01Z_04Z`04Za04Zb04Zc01Zd01Ze01Zf01Zg05Zh05Zi08Zj08Zk08Zl04Zm01[^18[_01[`01[a01[b01[c04[d04[e04[f01[g01[h05[i05[j08[k01[l01[m19\\b14\\c01\\d04\\e04\\f04\\g01\\h01\\i01\\j01\\k01\\l04\\m01]c18]d01]e01]f01]g04]h04]i04]j04]k04]l04]m01^f14^g01^h01^i01^j01^k01^l01^m18'
+      },{
+        traitName: 'cap2',
+        traitType: 'cap',
+        pixelCount: 397,
+        pixels: 'Bg20Bh01Bi01Bj01Bk01Bl21Cb20Cc01Cd01Ce01Cf01Cg01Ch22Ci22Cj22Ck22Cl01D_20D`01Da01Db01Dc22Dd22De22Df22Dg22Dh22Di22Dj23Dk23Dl01Dm24E[20E\\01E]01E^01E_01E`22Ea22Eb22Ec22Ed22Ee23Ef23Eg23Eh23Ei23Ej23Ek23El25Em01FY20FZ01F[01F\\22F]22F^22F_22F`22Fa01Fb01Fc23Fd23Fe23Ff23Fg01Fh01Fi01Fj01Fk01Fl25Fm01GW21GX01GY01GZ22G[01G\\01G]01G^23G_23G`25Ga01Gb25Gc01Gd01Ge01Gf01Gg01Gh25Gi25Gj25Gk25Gl06Gm01Gn07HV21HW01HX22HY22HZ01H[01H\\25H]01H^01H_25H`01Ha01Hb01Hc01Hd01He25Hf25Hg26Hh26Hi26Hj26Hk26Hl26Hm06Hn01IV01IW22IX23IY01IZ01I[25I\\25I]25I^01I_01I`24Id27Ie01If25Ig25Ih26Ii26Ij26Ik26Il06Im01In11JV01JW22JX01JY01JZ01J[01J\\01J]01J^24Jd27Je01Jf25Jg25Jh25Ji25Jj26Jk26Jl26Jm06Jn01KV01KW22KX23KY01Ka28Kb01Kc01Kd01Ke25Kf25Kg25Kh26Ki26Kj26Kk26Kl06Km01Kn13LV01LW22LX01LY29La01Lb26Lc26Ld26Le26Lf25Lg25Lh25Li25Lj01Lk01Ll01Lm13MV01MW22MX01MY29M`01Ma01Mb26Mc01Md01Me01Mf01Mg01Mh01Mi01Mj24NV20NW01NX23NY01Na01Nb01Nc30OW01OX23OY01OZ29PW29PX01PY23PZ01Pl13Pm01Pn13QX01QY23QZ01Q[29Qk31Ql01Qm06Qn01Qo13RX01RY17RZ23R[01Rj31Rk01Rl25Rm25Rn06Ro01SX01SY17SZ23S[01Sj01Sk25Sl25Sm06Sn01So13TX01TY17TZ23T[01Tj31Tk01Tl01Tm01Tn13UX01UY17UZ23U[01VW29VX01VY23VZ01V[32WV32WW01WX23WY01WZ32We01Wf01Wg01Wh01Wi01XV01XW23XX01XY33X^32X_01X`01Xa01Xb01Xc01Xd01Xe01Xf01Xg01Xh01Xi01Xj01Xk01Xl01Xm01Xn32YV32YW01YX23YY01Y^01Y_23Y`23Ya23Yb23Yc01Yd01Ye26Yf26Yg25Yh25Yi26Yj26Yk26Yl26Ym23Yn01ZW32ZX01ZY32Z^32Z_01Z`23Za23Zb23Zc23Zd01Ze01Zf01Zg01Zh25Zi25Zj26Zk26Zl26Zm23Zn01[_32[`01[a01[b01[c01[d23[e23[f23[g01[h01[i25[j25[k26[l01[m01[n33\\c29\\d01\\e23\\f23\\g23\\h01\\i01\\j01\\k01\\l01\\m23\\n01]d32]e01]f01]g01]h23]i23]j23]k23]l23]m23]n01^g29^h01^i01^j01^k01^l01^m01^n32'
+      }])
+
+      await dw.connect(account1).addTraitType(1,[{
+        traitName: 'face',
+        traitType: 'faces',
+        pixelCount: 121,
+        pixels: 'NP34NQ34NR34NS35NT35NU34NV34NW34OO34OP34OQ35OR35OS35OT35OU35OV35OW34PO34PP35PQ35PR36PS36PT36PU36PV35PW35QN34QO34QP35QQ35QR35QS37QT37QU36QV36QW35RN34RO35RP35RQ35RR35RS38RT39RU37RV36RW36SN40SO35SP35SQ35SR35SS41ST42SU37SV35SW36TM01TN43TO44TP45TQ36TR36TS46TT47TU36TV48TW36UN49UO44UP35UQ36UR36US36UT36UU36UV22UW36VN50VO44VP35VQ36VR36VS37VT35VU36VV22VW35WN50WO51WP45WQ37WR37WS52WT52WU37WV35WW35XO53XP35XQ37XR37XS54XT55XU37XV35XW01YO34YP56YQ44YR57YS58YT37YU01YV01YW59ZP50ZQ50ZR60ZS01ZT01ZU61'
+      },{
+        traitName: 'face2',
+        traitType: 'faces',
+        pixelCount: 120,
+        pixels: 'NP34NQ34NR34NS35NT35NU53NV81NW81OO34OP34OQ35OR35OS35OT35OU45OV45OW81PO34PP35PQ35PR36PS36PT77PU77PV45PW45QN34QO34QP35QQ35QR35QS80QT80QU77QV77QW45RN34RO35RP35RQ35RR77RS82RT83RU80RV77RW77SN40SO35SP35SQ77SR77SS78ST84SU80SV77SW77TM01TN43TO44TP45TQ77TR77TS78TT85TU77TV48TW77UN49UO44UP35UQ77UR77US77UT77UU77UV22UW80VN50VO44VP80VQ80VR80VS80VT86VU77VV22VW80WN50WO87WP45WQ80WR80WS88WT89WU80WV80WW35XO53XP35XQ80XR80XS90XT91XU80XV35XW01YO34YP92YQ44YR93YS94YT95YU01YV01YW59ZP50ZQ50ZR60ZS01ZT01'
+      }])
+
+      await dw.connect(account1).addTraitType(2,[{
+        traitName: 'chestArmor1',
+        traitType: 'chestArmor',
+        pixelCount: 165,
+        pixels: 'JY62JZ01J[01J\\63KX62KY01KZ64K[65K\\63LX01LY64LZ64L[65L\\01L]66MX01MY64MZ64M[64M\\65M]01M^66NX01NY64NZ64N[64N\\65N]65N^01N_67OX01OY64OZ64O[64O\\64O]65O^65O_01O`01Oa01Ob01Oc66PX01PY65PZ64P[64P\\64P]65P^65P_65P`65Pa65Pb65Pc01Pd66QX01QY65QZ65Q[64Q\\64Q]68Q^64Q_64Q`65Qa65Qb65Qc65Qd01RX67RY01RZ65R[64R\\64R]68R^64R_64R`64Ra65Rb65Rc65Rd01SY01SZ65S[64S\\64S]68S^64S_64S`64Sa65Sb65Sc65Sd01TX69TY01TZ68T[68T\\68T]68T^64T_64T`64Ta65Tb65Tc65Td01UX01UY68UZ68U[64U\\17U]68U^64U_64U`64Ua65Ub65Uc65Ud01VX01VY64VZ64V[64V\\64V]68V^64V_64V`64Va65Vb65Vc01Vd66WX01WY64WZ64W[64W\\68W]68W^64W_01W`01Wa01Wb01Wc66XX01XY64XZ64X[64X\\01X]01X^01X_70YX01YY64YZ64Y[64Y\\71ZX62ZY01ZZ64Z[01Z\\72[Y62[Z01[[62'
+      }])
+
+      await dw.connect(account1).addTraitType(3,[
+      {
+        traitName: 'eyes small',
+        traitType: 'eyes',
+        pixelCount: 21,
+        pixels: 'QS01QT74RS01RT17SR75SS01ST01TR76TS77TT77UR78US78UT78WS01WT01XR79XS01XT17YR44YS01YT80'
+      }])
+
+      await dw.connect(account1).addTraitType(4,[ {
+        traitName: 'hair',
+        traitType: 'hair',
+        pixelCount: 120,
+        pixels: 'KQ01LO01LP01LQ01LR01LS01LT01LU01LV01MM01MN01MO01MP68MQ01MR01MS01MT01MU01MV01MW01NL01NM01NN01NO01NP01NQ68NR01NS01NT01NU01NV01NW01NX01OK01OL01OM01ON01OO01OP01OQ68OR01OS01OT01OW01PK01PL01PM01PN01PO01PP01PQ01PR68PS01QK01QL01QM01QN01QO01QP01QQ01QR01QS117RJ01RK01RL01RM01RN01RO01RP01RQ01SJ01SK01SL01SM01SN01SO01SP01TJ01TK01TL01TM01TN01TO01UK01UL01UM01UN01UO01UP01VK01VL01VM01VN01VO01WL01WM01WN01WO01XL01XM01XN01XO01XP01YM01YN01YO01YP01YQ01YR01ZN01ZO01ZP01ZQ01ZR01[O01[P01[Q01[R01\\P01\\Q01'
+      }])
+
+      await dw.connect(account1).addTraitType(5,[ {
+        traitName: 'helmet1',
+        traitType: 'helmet',
+        pixelCount: 356,
+        pixels: 'JK118JL01JM01JN01JO01JP01JQ01JR01JS01JT01JU01JV01KI119KJ01KK01KL120KM120KN01KO121KP121KQ121KR121KS121KT121KU121KV01KW01KX122LI01LJ120LK120LL123LM120LN121LO124LP124LQ124LR124LS124LT124LU124LV124LW121LX01LY122MG119MH01MI01MJ120MK120ML120MM01MN125MO125MP64MQ64MR64MS64MT64MU64MV124MW121MX121MY01NE126NF126NG01NH120NI120NJ123NK123NL120NM01NN125NO64NP64NQ64NR64NS64NT64NU64NV64NW64NX124NY01OD119OE01OF120OG120OH123OI123OJ120OK120OL01OM125ON64OO64OP64OQ64OR127OS127OT127OU127OV64OW64OX124OY01PC119PD01PE120PF120PG120PH120PI120PJ123PK123PL01PM125PN64PO64PP64PQ127PR01PS01PT01PU01PV127PW64PX124PY01QC01QD120QE120QF120QG120QH120QI120QJ120QK120QL01QM64QN64QO64QP127QQ01QR128QU128QV01QW127QX124QY01RB118RC01RD120RE120RF120RG120RH120RI123RJ123RK123RL01RM64RN64RO64RP127RQ01RV01RW127RX124RY01SB01SC120SD120SE120SF120SG120SH123SI120SJ120SK120SL01SM64SN64SO125SP01SQ129SV01SW127SX124SY01TB01TC120TD120TE120TF120TG120TH120TI120TJ130TK130TL130TM64TN64TO64TP125TQ01TR131TV01TW127TX124TY01UB01UC120UD120UE120UF120UG120UH130UI130UJ130UK130UL130UM64UN64UO64UP64UQ125UR01US131UV01UW01UX01UY132VB01VC120VD120VE120VF130VG130VH130VI130VJ01VK01VL01VM64VN64VO64VP64VQ64VR125VS01VU70VV01VW133WB01WC120WD120WE130WF130WG01WH01WI01WJ01WK127WL64WM17WN64WO64WP127WQ127WR01WS131WU01WV64WW01XB01XC120XD130XE130XF01XG134XJ135XK01XL127XM17XN17XO127XP01XQ01XR136XU01XV127XW01YB01YC120YD130YE01YF137YK138YL01YM127YN64YO64YP64YQ01YR01YS01YT01YU01YV64YW01ZB01ZC120ZD01ZE134ZL138ZM01ZN127ZO64ZP64ZQ64ZR17ZS17ZT64ZU64ZV127ZW01[B01[C120[D01[M138[N01[O127[P127[Q127[R127[S127[T127[U127[V01[W138\\B01\\C01\\D119\\N138\\O01\\P01\\Q01\\R01\\S01\\T01\\U01\\V138]B01^B01'
+      }])
+
+      await dw.connect(account1).addTraitType(6,[ {
+        traitName: 'torso',
+        traitType: 'torso',
+        pixelCount: 242,
+        pixels: 'H^207H_01H`01Ha01Hb01Hc01Hd208I\\69I]01I^01I_17I`17Ia68Ib35Ic36Id01JY74JZ01J[01J\\01J]68J^68J_17J`17Ja68Jb35Jc36Jd01KX74KY01KZ17K[17K\\17K]68K^68K_17K`68Ka01Kb01Kc01Kd208LX01LY17LZ17L[17L\\17L]68L^68L_68L`01La209MX01MY17MZ17M[17M\\17M]68M^01M_01M`210Ma211Mb01Mc212NX01NY17NZ17N[17N\\68N]68N^01N_01N`01Na01Nb141Nc213OX01OY17OZ17O[17O\\17O]68O^68O_68O`68Oa141Ob141Oc214PX17PY17PZ17P[17P\\17P]17P^17P_68P`68Pa68Pb142Pc215QX17QY17QZ17Q[17Q\\17Q]17Q^17Q_17Q`68Qa68Qb142Qc216RX35RY17RZ17R[17R\\17R]17R^17R_17R`68Ra68Rb142Rc216SX35SY17SZ17S[17S\\17S]17S^17S_17S`68Sa68Sb142Sc216TX35TY68TZ17T[17T\\17T]17T^17T_17T`68Ta68Tb142Tc215UX35UY17UZ17U[17U\\17U]17U^17U_17U`68Ua68Ub141Uc214VX17VY17VZ17V[17V\\17V]17V^17V_17V`68Va68Vb141Vc217WX01WY17WZ17W[17W\\68W]68W^142W_142W`142Wa68Wb141Wc213XX01XY17XZ17X[17X\\68X]01X^01X_01X`01Xa01Xb01Xc212YX207YY01YZ17Y[17Y\\68Y]01Y^210ZY01ZZ17Z[68Z\\68Z]68Z^01Z_117[Y74[Z01[[01[\\68[]68[^68[_01[`117\\[01\\\\68\\]17\\^68\\_68\\`01\\a208][117]\\01]]17]^68]_68]`36]a01^\\74^]01^^35^_36^`36^a01_]59_^01__01_`01_a208'
+      }])
+
+      await dw.connect(account1).addTraitType(7,[    {
+        traitName: 'legs',
+        traitType: 'legs',
+        pixelCount: 149,
+        pixels: 'Lh139Li01Lj01Lk01Ll01Lm01Ln01Lo140Mc01Md01Me01Mf01Mg01Mh01Mi141Mj141Mk141Ml141Mm141Mn141Mo01Nc141Nd141Ne141Nf141Ng141Nh141Ni141Nj141Nk141Nl141Nm141Nn141No01Oc141Od141Oe141Of141Og142Oh142Oi141Oj141Ok141Ol141Om141On01Oo140Pc142Pd142Pe142Pf142Pg142Ph142Pi141Pj141Pk141Pl01Pm01Pn140Qc142Qd142Qe142Qf142Qg142Qh141Qi141Qj141Qk01Ql139Rc142Rd142Re142Rf142Rg142Rh141Ri01Rj01Rk140Sc142Sd142Se142Sf142Sg141Sh141Si01Sj143Tc142Td142Te141Tf141Tg141Th141Ti142Tj01Tk01Tl01Tm139Uc141Ud141Ue141Uf141Ug141Uh141Ui141Uj141Uk141Ul141Um01Un01Uo140Vc141Vd141Ve141Vf141Vg141Vh141Vi141Vj141Vk141Vl141Vm141Vn141Vo01Wc141Wd141We141Wf141Wg141Wh141Wi141Wj141Wk141Wl141Wm141Wn141Wo01Xc01Xd01Xe01Xf01Xg01Xh01Xi01Xj01Xk01Xl01Xm01Xn01Xo140'
+      }])
+
+
+    const hash = await dw.connect(account1).getTokenHash(1);
+    console.log('hash built:',hash)
+    // enable manual mining
+    await network.provider.send("evm_setAutomine", [false]);
+    await network.provider.send("evm_setIntervalMining", [0]);
+    dw.connect(account1).hashToSVG(hash,{gasLimit:9999335000000});
+    // mine the needed blocks, below we mine 256 blocks at once (how many blocks to
+    // mine depends on how many pending transactions you have), instead of having 
+    // to call `evm_mine` for every single block which is time consuming
+    await network.provider.send("hardhat_mine", ["0x100"]);
+
+    // re-enable automining when you are done, so you dont need to manually mine future blocks
+    await network.provider.send("evm_setAutomine", [true]);
+})

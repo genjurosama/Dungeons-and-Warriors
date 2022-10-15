@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./AnonymiceLibrary.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 
 contract DungeonsAndWarriors is ERC721,Ownable{
@@ -15,16 +17,90 @@ contract DungeonsAndWarriors is ERC721,Ownable{
 
 
     using Counters for Counters.Counter;
+    using AnonymiceLibrary for uint8;
     Counters.Counter counter;
 
     uint HpReplenishRateByMinute = 1;
     uint levelUpRateByHour = 1;
     uint damagePerHour = _random(3) + 1;
     uint8 levelUpHpModifier = 2;
+    uint256 SEED_NONCE = 0;
+    
      /*///////////////////////////////////////////////////////////////
                 DATA STRUCTURES 
     //////////////////////////////////////////////////////////////*/
 
+    mapping(uint256 => Trait[]) public traitTypes;   
+    mapping(string => bool) hashToMinted;
+    mapping(uint256 => string) internal tokenIdToHash;
+    struct Trait {
+        string traitName;
+        string traitType;
+        string pixels;
+        uint256 pixelCount;
+    }
+
+    //string arrays
+    string[] LETTERS = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "[",
+        "\\",
+        "]",
+        "^",
+        "_",
+        "`",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z"
+    ];
     event ActionMade(address owner, uint256 id, uint256 timestamp, uint8 activity);
     enum Dungeons { DRAGONSDEN,TOXICSWAMPS, MAGMACRATER }
     
@@ -52,6 +128,9 @@ contract DungeonsAndWarriors is ERC721,Ownable{
     mapping(uint256 => Warrior) warriors;
     mapping(uint => address) owners;
     mapping(uint => Action) currentActions;
+    //uint arrays
+    uint16[][8] TIERS;
+
 
 
     /*///////////////////////////////////////////////////////////////
@@ -79,9 +158,10 @@ contract DungeonsAndWarriors is ERC721,Ownable{
 
     function mint() public payable{
         counter.increment();
-        _safeMint(msg.sender, counter.current());
+        uint256 count = counter.current();
+        _safeMint(msg.sender, count);
         owners[counter.current()] = msg.sender;
-        _createWarrior(counter.current());
+        _createWarrior(count);
         refundIfOver(getPrice());
     }
 
@@ -90,15 +170,14 @@ contract DungeonsAndWarriors is ERC721,Ownable{
         currentActions[tokenId] = Action({owner:msg.sender, timestamp: block.timestamp, action: _action});
 
         if(_action == Actions.RESTING){
-            console.log('action1');
+            
             //todo restore HP
         }
         else if(_action == Actions.RAIDING){
-            console.log('action 0');
+
             //todo time locked Loot
         }
         else if(_action == Actions.TRAINING){
-            console.log('action2');
             //todo level up faster
         }
 
@@ -109,7 +188,6 @@ contract DungeonsAndWarriors is ERC721,Ownable{
         Action memory action = currentActions[tokenId];
 
         uint256 timeDiffInMinutes = (block.timestamp - action.timestamp) / 60;
-        console.log('time diff in minutes',timeDiffInMinutes);
         if(action.action == Actions.RESTING){
             Warrior memory warrior = warriors[tokenId] ;
             uint addedHp = timeDiffInMinutes * HpReplenishRateByMinute;
@@ -169,5 +247,7 @@ contract DungeonsAndWarriors is ERC721,Ownable{
         return uint(blockhash(block.number-1)) % number;
     }
 
+
+    
 
 }
